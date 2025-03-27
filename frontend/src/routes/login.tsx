@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { LoginForm } from "@/components/login-form"
-import { useSession } from '@/lib/auth-client'
+import { createFileRoute } from '@tanstack/react-router';
+import { LoginForm } from '@/components/login-form';
+import { useSession } from '@/lib/auth-client';
 
 export default function LoginPage() {
   return (
@@ -9,14 +9,12 @@ export default function LoginPage() {
         <LoginForm />
       </div>
     </div>
-  )
+  );
 }
-
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
   async beforeLoad(ctx) {
-    const session = await useSession();
+    // const session = await useSession();
   },
-})
-
+});

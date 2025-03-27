@@ -10,123 +10,141 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SignupImport } from './routes/signup'
-import { Route as LoginImport } from './routes/login'
-import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as SignupImport } from "./routes/signup";
+import { Route as LoginImport } from "./routes/login";
+import { Route as AuthImport } from "./routes/_auth";
+import { Route as ProtectedIndexImport } from "./routes/_protected/index";
+import { Route as ProtectedAboutImport } from "./routes/_protected/about";
 
 // Create/Update Routes
 
 const SignupRoute = SignupImport.update({
-  id: '/signup',
-  path: '/signup',
+  id: "/signup",
+  path: "/signup",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const LoginRoute = LoginImport.update({
-  id: '/login',
-  path: '/login',
+  id: "/login",
+  path: "/login",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
+const AuthRoute = AuthImport.update({
+  id: "/_auth",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+const ProtectedIndexRoute = ProtectedIndexImport.update({
+  id: "/_protected/",
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
+
+const ProtectedAboutRoute = ProtectedAboutImport.update({
+  id: "/_protected/about",
+  path: "/about",
+  getParentRoute: () => rootRoute,
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupImport
-      parentRoute: typeof rootRoute
-    }
+    "/_auth": {
+      id: "/_auth";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof AuthImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/login": {
+      id: "/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof LoginImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/signup": {
+      id: "/signup";
+      path: "/signup";
+      fullPath: "/signup";
+      preLoaderRoute: typeof SignupImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_protected/about": {
+      id: "/_protected/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof ProtectedAboutImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_protected/": {
+      id: "/_protected/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof ProtectedIndexImport;
+      parentRoute: typeof rootRoute;
+    };
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
+  "": typeof AuthRoute;
+  "/login": typeof LoginRoute;
+  "/signup": typeof SignupRoute;
+  "/about": typeof ProtectedAboutRoute;
+  "/": typeof ProtectedIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
+  "": typeof AuthRoute;
+  "/login": typeof LoginRoute;
+  "/signup": typeof SignupRoute;
+  "/about": typeof ProtectedAboutRoute;
+  "/": typeof ProtectedIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/signup': typeof SignupRoute
+  __root__: typeof rootRoute;
+  "/_auth": typeof AuthRoute;
+  "/login": typeof LoginRoute;
+  "/signup": typeof SignupRoute;
+  "/_protected/about": typeof ProtectedAboutRoute;
+  "/_protected/": typeof ProtectedIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/login' | '/signup'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/login' | '/signup'
-  id: '__root__' | '/' | '/about' | '/login' | '/signup'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: "" | "/login" | "/signup" | "/about" | "/";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "" | "/login" | "/signup" | "/about" | "/";
+  id: "__root__" | "/_auth" | "/login" | "/signup" | "/_protected/about" | "/_protected/";
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  LoginRoute: typeof LoginRoute
-  SignupRoute: typeof SignupRoute
+  AuthRoute: typeof AuthRoute;
+  LoginRoute: typeof LoginRoute;
+  SignupRoute: typeof SignupRoute;
+  ProtectedAboutRoute: typeof ProtectedAboutRoute;
+  ProtectedIndexRoute: typeof ProtectedIndexRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
+  AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
-}
+  ProtectedAboutRoute: ProtectedAboutRoute,
+  ProtectedIndexRoute: ProtectedIndexRoute,
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
@@ -134,23 +152,27 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/about",
+        "/_auth",
         "/login",
-        "/signup"
+        "/signup",
+        "/_protected/about",
+        "/_protected/"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/about": {
-      "filePath": "about.tsx"
+    "/_auth": {
+      "filePath": "_auth.tsx"
     },
     "/login": {
       "filePath": "login.tsx"
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/_protected/about": {
+      "filePath": "_protected/about.tsx"
+    },
+    "/_protected/": {
+      "filePath": "_protected/index.tsx"
     }
   }
 }
