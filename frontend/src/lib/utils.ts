@@ -11,11 +11,12 @@ export async function cachedGetSession(): Promise<ReturnType<typeof getSession>>
   const existingSession = localStorage.getItem("auth_session");
   if (
     !lastReq ||
-    new Date(lastReq).getMinutes() + 5 < new Date().getMinutes() ||
+    new Date(lastReq).getMinutes() + 5 > new Date().getMinutes() ||
     !existingSession
   ) {
     localStorage.setItem("auth_last_getSession", new Date().toISOString());
     const session = await getSession();
+    console.log(session)
     localStorage.setItem("auth_session", JSON.stringify(session));
     return session;
   }
