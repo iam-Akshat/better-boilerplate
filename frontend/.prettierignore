@@ -6,3 +6,4 @@ coverage
 .vercel
 .turbo
 *.gen.ts
+routeTree.gen.ts

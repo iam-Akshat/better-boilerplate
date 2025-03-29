@@ -7,19 +7,21 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function cachedGetSession(): Promise<ReturnType<typeof getSession>> {
-  const lastReq = localStorage.getItem("auth_last_getSession");
-  const existingSession = localStorage.getItem("auth_session");
-  if (
-    !lastReq ||
-    new Date(lastReq).getMinutes() + 5 > new Date().getMinutes() ||
-    !existingSession
-  ) {
-    localStorage.setItem("auth_last_getSession", new Date().toISOString());
+  const lastReq = Number(localStorage.getItem("auth_last_getSession"));
+  const existingSession = JSON.parse(localStorage.getItem("auth_session") || "{}") as ReturnType<
+    typeof getSession
+  >;
+  if (!lastReq || Date.now() - lastReq > 5 * 1000 * 10 || !existingSession) {
+    localStorage.setItem("auth_last_getSession", Date.now().toString());
     const session = await getSession();
-    console.log(session)
     localStorage.setItem("auth_session", JSON.stringify(session));
+
+    if (session.error) {
+      localStorage.removeItem("auth_session");
+      localStorage.removeItem("auth_last_getSession");
+    }
     return session;
   }
 
-  return JSON.parse(existingSession) as ReturnType<typeof getSession>;
+  return existingSession as ReturnType<typeof getSession>;
 }
