@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createRootRoute,
+  useRouteContext,
+  useRouterState,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import PublicRootLayout from "@/layouts/PublicRootLayout";
 
@@ -12,10 +18,17 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+  const routeParams = useRouterState();
+
   return (
     <>
-      <PublicRootLayout />
-
+      {routeParams.location.pathname === "/" ? (
+        <div className="w-full flex justify-center items-center bg-black">
+          <PublicRootLayout />
+        </div>
+      ) : (
+        <Outlet />
+      )}
       <TanStackRouterDevtools position="bottom-right" />
     </>
   );
